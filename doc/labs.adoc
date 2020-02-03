@@ -7,7 +7,7 @@ During the background research we came across an excellent JPMS starter from the
 
 === Getting it to compile
 
-As it turns out, there are actually surprisingly small changes that we have to do in order to accomplish this as long as we accept that the Vaadin modules will be converted to "automatic modules" rather than proper Java 9 "named modules" and accept we cannot use the Vaadin dev-mode while running the application in a modular fashion (more about that later). We can essentially copy the maven configurations from a simple Vaadin Spring boot starter https://vaadin.com/start[https://vaadin.com/start] and start defining the required dependencies in our `web` module `module-info.java` file.
+As it turns out, there are actually surprisingly small changes that we have to do in order to accomplish this as long as we accept that the Vaadin modules will be converted to `automatic modules` rather than proper Java 9 `named modules` and accept we cannot use the Vaadin dev-mode while running the application in a modular fashion (more about that later). We can essentially copy the maven configurations from a simple Vaadin Spring boot starter https://vaadin.com/start[https://vaadin.com/start] and start defining the required dependencies in our `web` module `module-info.java` file.
 
 ```
 module example.web {
@@ -35,9 +35,9 @@ module example.web {
 }
 ```
 
-As modules enforce strong encapsulation by default in JPMS, we have to state which modules our "web" module requires. Also, in order for Vaadin to be able to detect our views, we need to open and export our `web` and `web.controller` packages to both `flow-server` and since we're using Vaadins spring integration `vaadin-spring`.
+As modules enforce strong encapsulation by default in JPMS, we have to state which modules our `web` module requires. Also, in order for Vaadin to be able to detect our views, we need to open and export our `web` and `web.controller` packages to both `flow-server` and since we're using Vaadin spring integration `vaadin-spring`.
 
-After this, we should be able to compile and run our application, however it doesn't quite work yet. If we try to navigate to our application application will fail to load the correct client-side bundle. This is due to `flow-server` trying to load a resource from the `flow-client` module, which is not visible to `flow-server`. We could probably solve this in many ways (for instance the correct combination of `--add-opens` and `--add-reads`) however, we decided to use `--patch-module` to override a single class in `flow-server`.
+After this we should be able to compile and run our application, however it doesn't quite work yet. If we try to navigate to our application will fail to load the correct client-side bundle. This is due to `flow-server` trying to load a resource from the `flow-client` module, which is not visible to `flow-server`. We could probably solve this in many ways (for instance the correct combination of `--add-opens` and `--add-reads`) however, we decided to use `--patch-module` to override a single class in `flow-server`.
 
 The `patchflow` module contains a copy of `com.vaadin.flow.client.DefaultClientResources` which simply uses one of the classes in `flow-client` to actually fetch the resource, therefore using the correct classloader which has access to the resources in the `flow-client` module.
 
@@ -58,7 +58,7 @@ If we then go to http://localhost:8080/[http://localhost:8080/] we should see so
 
 image::img/vaadin-jpms.png[vaadin-jpms]
 
-The example view shows which modules the various classes are loaded from so that we can verify that the runtime is actually enforcing module boundaries as well. If we wanted to, we could run the application in a single "unnamed module" to observe the difference. For this we can do the following:
+The example view shows which modules the various classes are loaded from so that we can verify that the runtime is actually enforcing module boundaries as well. If we wanted to, we could run the application in a single `unnamed module` to observe the difference. For this we can do the following:
 
 ```
 cd ..
@@ -68,7 +68,7 @@ mvn package -Pproduction spring-boot:repackage
 java -jar target/web-0.0.1.jar
 ```
 
-If we now go to http://localhost:8080/[http://localhost:8080] we should see the same application. However, if we look at the application layers at the top, we can notice that tey are not in their own named modules anymore, rather they are all in the "unnamed module", i.e. like we're used to from good old Java. In this configuration we can even run the `web` module in Vaadin dev mode as the unnamed module exposes all jars on its classpath.
+If we now go to http://localhost:8080/[http://localhost:8080] we should see the same application. However, if we look at the application layers at the top, we can notice that tey are not in their own named modules anymore, rather they are all in the `unnamed module`, i.e. like we're used to from good old Java. In this configuration we can even run the `web` module in Vaadin dev mode as the unnamed module exposes all jars on its classpath.
 
 image::img/vaadin-unnamed.png[vaadin-unnamed]
 
@@ -81,7 +81,7 @@ Github: https://github.com/petrixh/jpms-spring-vaadin-example[https://github.com
 
 There are things that could be improved like removing the need for patching `flow-client` and adding `Automatic-module-name:` attributes to the Vaadin Jars. Are these things that would make your experience better and is it something Vaadin should focus on? Let us know in the comments section below, maybe we'll consider bringing some of these improvements to the Vaadin Core to make your life easier in the future.
 
-=== Acknowledges
+=== Acknowledgements
 A big part of this labs POC goes to Knut Borchers aka. "qutax" in Github who made an excellent JPMS Spring Boot starter that we were able to use and modify. His starter is available under the `MIT` license here: https://github.com/qutax/jpms-spring-example[https://github.com/qutax/jpms-spring-example]
 
 ==== DISCLAIMER

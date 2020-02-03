@@ -11,28 +11,29 @@ import red.jackal.training.spring.jpms.service.ExampleService;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/example")
+//@RestController
+//@RequestMapping("/example")
 public class ExampleController {
 
     private final ExampleService exampleService;
 
-    @Autowired
+  //  @Autowired
     public ExampleController(ExampleService exampleService) {
         this.exampleService = exampleService;
     }
 
-    @GetMapping("/{id}")
+//    @GetMapping("/{id}")
     public ExampleEntity getExample(@PathVariable Long id) {
         return exampleService.getExample(id).orElse(null);
     }
 
-    @GetMapping("/all")
+//    @GetMapping("/all")
     public List<ExampleEntity> getAllExamples() {
+        System.out.println("Ex entity from module: " + ExampleEntity.class.getModule().getName()); 
         return exampleService.getAllExamples();
     }
 
-    @PostMapping("/add/{name}")
+//    @PostMapping("/add/{name}")
     public ExampleEntity addExample(@PathVariable String name) {
         return exampleService.addExample(name);
     }

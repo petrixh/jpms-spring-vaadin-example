@@ -13,15 +13,17 @@
         <module>persistence</module>
         <module>service</module>
         <module>web</module>
+        <module>patchflow</module>
     </modules>
 
     <properties>
         <java.version>11</java.version>
-        <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <vaadin.version>14.1.16</vaadin.version>
     </properties>
 
     <build>
@@ -45,6 +47,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+                <dependency>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-bom</artifactId>
+                    <version>${vaadin.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

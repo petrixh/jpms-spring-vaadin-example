@@ -10,8 +10,9 @@ module example.persistence {
     requires spring.jdbc;
     requires spring.orm;
     requires spring.tx;
+	requires com.fasterxml.classmate;
 
-    exports red.jackal.training.spring.jpms.entity;
+	exports red.jackal.training.spring.jpms.entity;
     exports red.jackal.training.spring.jpms.repository to example.service;
 
     opens red.jackal.training.spring.jpms.config to spring.core, spring.beans, spring.context;
